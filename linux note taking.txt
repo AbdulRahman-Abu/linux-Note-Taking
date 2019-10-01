@@ -1,0 +1,578 @@
+
+
+https://training.linuxfoundation.org/free-linux-training/linux-training-videos
+https://training.linuxfoundation.org/linux-courses/system-administration-training/introduction-to-linux
+https://www.edx.org/
+https://courses.edx.org/courses/course-v1:LinuxFoundationX+LFS101x+1T2017/courseware/c879223aff62482dbfcf57265b23e5d7/ce19115c1efe4462a6606283ea1c1930/?activate_block_id=block-v1%3ALinuxFoundationX%2BLFS101x%2B1T2017%2Btype%40sequential%2Bblock%40ce19115c1efe4462a6606283ea1c1930
+https://courses.edx.org/courses/course-v1:LinuxFoundationX+LFS101x+1T2017/course/
+LINUX INSTALLATION
+1) Download Virtual box for Virtual Machine
+
+
+LINUX
+
+The halt, poweroff, and shutdown -h now commands allow you to shut down the 
+system, as root, without rebooting.
+
+An available text terminal will prompt for a username (with the string login:)
+and password. When typing your password, nothing is displayed on the terminal
+(not even a * to indicate that you typed in something), to prevent others from
+seeing your password. After you have logged into the system, you can perform 
+basic operations.
+
+Once your session is started (either by logging into a text terminal or via a 
+graphical terminal program), you can also connect and log into remote 
+systems via the Secure Shell (SSH) utility. For example, by typing ssh 
+username@remote-server.com, SSH would connect securely to the remote machine 
+and give you a command line terminal window, using passwords (as with regular
+logins) or cryptographic keys (a topic we will not discuss) to prove your 
+identity.
+
+Rebooting and Shutting Down
+
+The preferred method to shut down or reboot the system is to use the shutdown 
+command. This sends a warning message and then prevents further users from 
+logging in. The init process will then control shutting down or rebooting the 
+system. It is important to always shut down properly; failure to do so can 
+result in damage to the system and/or loss of data.
+
+The halt and poweroff commands issue shutdown -h to halt the system; reboot 
+issues shutdown -r and causes the machine to reboot instead of just shutting 
+down. Both rebooting and shutting down from the command line requires 
+superuser (root) access.
+
+When administering a multiuser system, you have the option of notifying all 
+users prior to shutdown, as in:
+
+$ sudo shutdown -h 10:00 "Shutting down for scheduled maintenance."
+
+LOCATING APPLICATIONS
+Depending on the specifics of your particular distribution's policy, programs 
+and software packages can be installed in various directories. In general, 
+executable programs should live in the /bin, /usr/bin, /sbin, 
+/usr/sbin directories, or under /opt.
+
+One way to locate programs is to employ the which utility. For example, to 
+find out exactly where the diff program resides on the filesystem:
+
+$ which diff
+
+If which does not find the program, whereis is a good alternative because it 
+looks for packages in a broader range of system directories:
+
+$ whereis diff
+
+as well as locating source and man files packaged with the program.
+
+
+Accessing Directories
+When you first log into a system or open a terminal, the default directory 
+should be your home directory; you can print the exact path of this by typing 
+echo $HOME. (Many Linux distributions actually open new graphical terminals in
+$HOME/Desktop.)  The following commands are useful for directory navigation:
+
+Command	Result
+pwd	Displays the present working directory
+cd ~ or cd	Change to your home directory (short-cut name is ~ (tilde))
+cd ..	Change to parent directory (..)
+cd -	Change to previous directory (- (minus))
+
+
+Understanding Absolute and Relative Paths
+There are two ways to identify paths:
+
+Absolute pathname: An absolute pathname begins with the root directory and 
+follows the tree, branch by branch, until it reaches the desired directory or 
+file. Absolute paths always start with /.
+Relative pathname: A relative pathname starts from the present working 
+directory. Relative paths never start with /.
+Multiple slashes (/) between directories and files are allowed, but all but 
+one slash between elements in the pathname is ignored by the system. 
+////usr//bin is valid, but seen as /usr/bin by the system.
+
+Most of the time, it is most convenient to use relative paths, which require 
+less typing. Usually, you take advantage of the shortcuts provided by: 
+. (present directory), .. (parent directory) and ~ (your home directory).
+
+For example, suppose you are currently working in your home directory and 
+wish to move to the /usr/bin directory. The following two ways will bring you 
+to the same directory from your home directory:
+
+Absolute pathname method: $ cd /usr/bin
+Relative pathname method:   $ cd ../../usr/bin
+In this case, the absolute pathname method is less typing.
+
+
+Exploring the FileSystem
+Traversing up and down the filesystem tree can get tedious. The tree command 
+is a good way to get a bird’s-eye view of the filesystem tree. Use tree -d to 
+view just the directories and to suppress listing file names.
+
+The following commands can help in exploring the filesystem:
+
+Command	Usage
+cd /	Changes your current directory to the root (/) directory (or path you 
+supply)
+ls	List the contents of the present working directory
+ls –a	List all files including hidden files and directories (those whose 
+        name start with . )
+tree	Displays a tree view of the filesystem
+
+
+Hard File Links
+
+The ln utility is used to create hard links and (with the -s option) soft 
+links, also known as symbolic links or symlinks. These two kinds of links 
+are very useful in UNIX-based operating systems.
+
+Suppose that file1 already exists. A hard link, called file2, is created with 
+the command:
+
+$ ln file1 file2
+
+Note that two files now appear to exist. However, a closer inspection of the 
+file listing shows that this is not quite true.
+
+$ ls -li file1 file2
+
+The -i option to ls prints out in the first column the inode number, which is 
+a unique quantity for each file object. This field is the same for both of 
+these files; what is really going on here is that it is only one file but it 
+has more than one name associated with it, as is indicated by the 2 that 
+appears in the ls output. Thus, there was already another object linked to 
+file1 before the command was executed.
+
+Hard links are very useful and they save space, but you have to be careful 
+with their use, sometimes in subtle ways. For one thing, if you remove either 
+file1 or file2 in the example, the inode object (and the remaining file name) 
+will remain, which might be undesirable, as it may lead to subtle errors later
+if you recreate a file of that name.
+
+If you edit one of the files, exactly what happens depends on your editor; 
+most editors, including vi and gedit, will retain the link by default, but it 
+is possible that modifying one of the names may break the link and result in 
+the creation of two objects.
+
+FILE SYSTEM
+Use cd / to navigate to files directory
+1) To get to lib file, use
+   cd /usr/local/lib
+2) To go back to usr directory
+   cd /usr
+3) To go to the root directory
+   cd /
+4) To view all file directories,type
+    Is
+5) To have a tree view of the directories, type:
+   tree
+NB: This didnt work for me
+6) To view all directories including hidden directories;
+   ls -a
+
+
+NAVIGATING THE DIRECTORY HISTORY
+The cd command remembers where you were last, and lets you get back there with
+cd -. For remembering more than just the last directory visited, use pushd to
+change the directory instead of cd; this pushes your starting directory onto
+a list. Using popd will then send you back to those directories, walking in 
+reverse order (the most recent directory will be the first one retrieved with
+popd). The list of directories is displayed with the dirs command.
+
+
+LOCATING APPLICATIONS
+Using WHICH and WHEREIS eg whereis ip, which ip
+
+
+WORKING WITH FILES
+Linux provides many commands that help you with viewing the contents of a file,
+creating a new file or an empty file, changing the timestamp of a file, and 
+removing and renaming a file or directory. These commands help you in managing
+your data and files and in ensuring that the correct data is available at the
+correct location.
+
+Viewing Files
+You can use the following utilities to view files:
+
+Command	Usage
+cat	Used for viewing files that are not very long; it does not provide any scroll-back.
+tac	Used to look at a file backwards, starting with the last line.
+less	Used to view larger files because it is a paging program; it pauses at each screen full of text, provides scroll-back capabilities, and lets you search and navigate within the file. Note: Use / to search for a pattern in the forward direction and ? for a pattern in the backward direction. (An older program named more is still used, but has fewer capabilities.)
+tail	Used to print the last 10 lines of a file by default. You can change the number of lines by doing -n 15 or just -15 if you wanted to look at the last 15 lines instead of the default.
+head	The opposite of tail; by default, it prints the first 10 lines of a 
+file.
+
+touch and mkdir
+touch is often used to set or update the access, change, and modify times of 
+files. By default, it resets a file's time stamp to match the current time.
+
+However, you can also create an empty file using touch:
+$ touch <filename>
+
+This is normally done to create an empty file as a placeholder for a later 
+purpose.
+
+touch provides several options, but here is one of interest:
+
+The -t option allows you to set the date and time stamp of the file.
+To set the time stamp to a specific time:
+$ touch -t 03201600 myfile
+
+This sets the myfile file's time stamp to 4 p.m., March 20th (03 20 1600).
+
+mkdir is used to create a directory.:
+
+To create a sample directory named sampdir under the current directory, type 
+mkdir sampdir.
+To create a sample directory called sampdir under /usr, type 
+mkdir /usr/sampdir.
+Removing a directory is simply done with rmdir. The directory must be empty 
+or it will fail. To remove a directory and all of its contents you have to 
+do rm -rf, as we shall discuss.
+
+REMOVING A FILE
+Command	Usage
+mv	Rename a file 
+rm	Remove a file 
+rm –f	Forcefully remove a file
+rm –i	Interactively remove a file
+If you are not certain about removing files that match a pattern you supply,
+it is always good to run rm interactively (rm –i) to prompt before every 
+removal.
+
+Renaming or Removing a Directory
+rmdir works only on empty directories; otherwise you get an error.
+
+While typing rm –rf is a fast and easy way to remove a whole filesystem tree
+recursively, it is extremely dangerous and should be used with the utmost 
+care, especially when used by root (recall that recursive means drilling 
+down through all sub-directories, all the way down a tree). Below are the 
+commands used to rename or remove a directory:
+
+Command	Usage
+mv	Rename a directory
+rmdir	Remove an empty directory
+rm -rf	Forcefully remove a directory recursively
+
+Modifying the Command Line Prompt
+The PS1 variable is the character string that is displayed as the prompt on the command line. Most distributions set PS1 to a known default value, which is suitable in most cases. However, users may want custom information to show on the command line. For example, some system administrators require the user and the host system name to show up on the command line as in:
+
+student@quad32 $
+
+This could prove useful if you are working in multiple roles and want to be
+always reminded of who you are and what machine you are on. The prompt above 
+could be implemented by setting the PS1 variable to: \u@\h \$
+
+For example:
+
+$ echo $PS1
+\$
+$ PS1="\u@\h \$ "
+coop@quad64 $ echo $PS1
+\u@\h \$ 
+coop@quad64 $ 
+
+Try-It-Yourself: Working with Files and Directories at the Command Prompt
+Tasks to be performed:
+Using touch, create file1 and file2 (two empty files) with timestamp: 14 March 2018 2:00 PM.
+Check for the existence of file1 and file2 using ls -l .
+Rename file1 to new_file1 using mv.
+Remove file2 using rm without any options.
+Remove new_file1 using rm without any options.
+Create a directory named dir1, using mkdir.
+Remove dir1 using rmdir without any options.
+
+Creating, Moving and Removing Files
+Create an empty file named exercise.txt and move this file to the 
+/tmp directory, using a relative pathname from your home directory. Then, 
+delete this file using an absolute pathname.
+
+Solution:
+student:/home/student> touch exercise.txt
+student:/home/student> mv exercise.txt ../../tmp
+student:/tmp> rm /tmp/exercise.txt
+
+
+Standard File Streams
+When commands are executed, by default there are three standard file streams
+(or descriptors) always open for use: standard input (standard in or stdin), 
+standard output (standard out or stdout) and standard error (or stderr).
+
+Name	Symbolic Name	Value	Example
+standard input	stdin	0	keyboard
+standard output	stdout	1	terminal
+standard error	stderr	2	log file
+Usually, stdin is your keyboard, stdout and stderr are printed on your 
+terminal; often, stderr is redirected to an error logging file. stdin is 
+often supplied by directing input to come from a file or from the output of 
+a previous command through a pipe. stdout is also often redirected into a 
+file. Since stderr is where error messages are written, often nothing will 
+go there.
+
+In Linux, all open files are represented internally by what are called file descriptors. Simply put, these are represented by numbers starting at zero. stdin is file descriptor 0, stdout is file descriptor 1, and stderr is file descriptor 2. Typically, if other files are opened in addition to these three, which are opened by default, they will start at file descriptor 3 and increase from there.
+
+On the next screen and in the chapters ahead, you will see examples which 
+alter where a running command gets its input, where it writes its output, or 
+where it prints diagnostic (error) messages. 
+
+
+Key or key combination Function
+Ctrl+A Move cursor to the beginning of the command line.
+Ctrl+C End a running program and return the prompt, see Chapter 4.
+Ctrl+D Log out of the current shell session, equal to typing exit or logout.
+Ctrl+E Move cursor to the end of the command line.
+Ctrl+H Generate backspace character.
+Ctrl+L Clear this terminal.
+Ctrl+R Search command history, see Section 3.3.3.4.
+Ctrl+Z Suspend a program, see Chapter 4.
+ArrowLeft and
+ArrowRight
+Move the cursor one place to the left or right on the command line, so that you can
+insert characters at other places than just at the beginning and the end.
+ArrowUp and
+ArrowDown
+Browse history. Go to the line that you want to repeat, edit details if necessary,
+and press Enter to save time.
+Shift+PageUp and
+Shift+PageDown Browse terminal buffer (to see text that has "scrolled off" the screen).
+Tab
+Command or filename completion; when multiple choices are possible, the system
+will either signal with an audio or visual bell, or, if too many choices are possible,
+ask you if you want to see them all.
+Tab Tab Shows file or command completion possibilities.
+
+Browse to the next page using the space bar. You can go back to the previous 
+page using the b-key. When you reach the end, man will usually quit and you 
+get the prompt back. Type q if you want to leave the man page before reaching
+ the end, or if the viewer does not quit automatically at the end of the page.
+
+Browse to the next page using the space bar. You can go back to the previous page using the b-key. When you reach the end, man will usually quit and you get the prompt back. Type q if you want to leave the man page before reaching the end, or if the viewer does not quit automatically at the end of the page.
+
+Some commands don't have separate documentation, because they are part of another command. cd, exit,
+logout and pwd are such exceptions. They are part of your shell program and are called shell built-in
+commands.
+
+apropos Search information about a command or subject.
+cat     Show content of one or more files.
+cd      Change into another directory.
+exit    Leave a shell session.
+file    Get information about the content of a file.
+info    Read Info pages about a command.
+logout  Leave a shell session.
+ls      List directory content.
+man     Read manual pages of a command.
+passwd  Change your password.
+pwd     Display the current working directory.
+
+
+Symbol Meaning
+- Regular file
+d Directory
+l Link
+c Special file
+s Socket
+p Named pipe
+b Block device
+
+TO GO DIRECTLY TO THE CURRENT HOME DIR
+cd ~
+TO GO DIRECTLY TO ANY FOLDER FROM ANY WHERE eg
+cd ~ /Downloads
+This takes one to the Downloads folder
+
+ls - l
+This gives more infor about files in a directory
+ll as well
+ls -lha
+la -la
+
+FOR HELP
+ls --help
+
+TO CAN VIEW LISTING OF ANY DIR WITH THE RIGHT PERMISSION
+If you are in another dir and want to see files in another dir without going to that dir, as long as you have the proper rights, you can do so say eg say we are in desktop and we want to see files in folder: "startng" without cd in to the dir, use below
+ls startng
+
+USING man pages
+This is basically a manual about a command eg
+man ls
+
+TO CREATE FILES
+touch file1
+
+CREATE FILE FOR ANOTHER DIR WHILE IN A DIFF DIR
+Say you are in home dir but do not want to cd to create diff files, while in home you can create allin files for those dir as longas you have the access eg
+
+$ touch Desktop/file01 Documents/file02 Downloads/file03
+LINUX IS CASE SENSITIVE
+
+FIND A FILE
+To find a file in your curr dir
+find filename eg find file01
+
+USING locate to find a file
+Using locate is the best option to find/locate files but you have to have root priviledge or su to root. Now say you are user, type
+su
+Then it wont ask for password. Provide root password. Once accepted, type:
+updatedb
+Then type:
+locate filename eg locate file01
+
+TO IGNORE CASE SENSITIVITY
+Say you want to locate a file: file01, you can use capital F along with ignore(-i) ie
+locate -i File01
+
+TO SEARCH WITHOUT KNOWING FULL NAME OF FILES
+if say filename is file01 but you dont know the full name, type a sub of the file and you will have all files with that name:
+locate -i fil
+
+Always update you database everyday before finding stuffs
+
+FINE TUNING YOUR SEARCH
+Say you want to search home dir for a file but do not want other files to show except they match the name, use help first to see options
+locate --help
+using help show -b may be appropriate, so we search
+loacte -b /home file0
+
+CAT FUNCTION: 
+cat is should to print out content to the screen
+
+TO SWITCH FROM ONE USER TO ANOTHER
+Type su followed by space, then the user name
+su raybaba
+To switch to root user from any user, just type su and you will be promted for password
+
+PERMISSIONS and COMMAND
+COMMAND  :     OWNER :   GROUP  :   WORLD :          PATH for example
+drwxr-xr-x. 2  abdul   sysadmins   4096 Sep 18 15:41 Desktop  
+Meaning:
+d-dir
+rwx: abdul has read,write,execute right to that file
+r-x: sysadmins have read and execute right to that file
+r-x: other user(total of 4096) have read and execute right to that file
+
+4   Read       (r)
+2   Write      (w)
+1   Execute  (x)
+ -rwx
+7: 4 + 2 + 1 (rwx)
+6: 4 + 2 (rw)
+5: 4 + 1 (rx)
+4: 4 (r)
+3: 2 + 1 (wx)
+2: 2 (w)
+1: 1 (x)
+
+Example:
+[root@localhost raybaba]# ll RedHatTestFile 
+-rw-r--r--. 1 root root 0 Sep 21 14:48 RedHatTestFile
+[root@localhost raybaba]# chmod 764 RedHatTestFile 
+[root@localhost raybaba]# ll RedHatTestFile 
+-rwxrw-r--. 1 root root 0 Sep 21 14:48 RedHatTestFile
+[root@localhost raybaba]# 
+
+Explained:
+chmod is used to initiate change permission/mode
+764: Give the user 7(rwx), group 6(rw), other 4(r) permissions.
+NOTE: You must have the access rights before you can alter file permissions
+
+[root@localhost raybaba]# ll RedHatTestFile 
+-rw-rw-r--. 1 root root 0 Sep 21 14:48 RedHatTestFile
+[root@localhost raybaba]# chmod +x  RedHatTestFile 
+[root@localhost raybaba]# ll RedHatTestFile 
+-rwxrwxr-x. 1 root root 0 Sep 21 14:48 RedHatTestFile
+[root@localhost raybaba]# chmod -x  RedHatTestFile 
+[root@localhost raybaba]# ll RedHatTestFile 
+-rw-rw-r--. 1 root root 0 Sep 21 14:48 RedHatTestFile
+EXPLAINED:
+chmod +x  RedHatTestFile: Add execute to ALL users
+chmod -x  RedHatTestFile: Remove execute from ALL users
+
+Alter files permissions even when you are in a diff dir from the files
+
+CHANGE PERMISSIONS OF FILES WHILE IN ANOTHER DIRECTORY
+Example:
+
+[raybaba@localhost TESTFOLDER]$ cd ..
+[raybaba@localhost Desktop]$ touch TESTFOLDER/test2 TESTFOLDER/test3
+[raybaba@localhost Desktop]$ ll TESTFOLDER/
+total 0
+-rw-rw-r--. 1 raybaba raybaba 0 Sep 27 23:59 test1
+-rw-rw-r--. 1 raybaba raybaba 0 Sep 28 00:01 test2
+-rw-rw-r--. 1 raybaba raybaba 0 Sep 28 00:01 test3
+[raybaba@localhost Desktop]$ chmod -R +x TESTFOLDER/
+[raybaba@localhost Desktop]$ ll TESTFOLDER/
+total 0
+-rwxrwxr-x. 1 raybaba raybaba 0 Sep 27 23:59 test1
+-rwxrwxr-x. 1 raybaba raybaba 0 Sep 28 00:01 test2
+-rwxrwxr-x. 1 raybaba raybaba 0 Sep 28 00:01 test3
+
+When you do this, the permission granted and retrieved afters every user. To make it affect only a the group, file owner or world users, use the digit permisions eg
+
+[raybaba@localhost Desktop]$ chmod -R 764 TESTFOLDER/
+[raybaba@localhost Desktop]$ ll TESTFOLDER/
+total 0
+-rwxrw-r--. 1 raybaba raybaba 0 Sep 27 23:59 test1
+-rwxrw-r--. 1 raybaba raybaba 0 Sep 28 00:01 test2
+-rwxrw-r--. 1 raybaba raybaba 0 Sep 28 00:01 test3
+
+CHANGE OWNERSHIP OF A FILES
+We can change ownership of any files from a user to root, root to user and as well as change the group. You need to su to root admin to make these changes, for example:
+
+[root@localhost Desktop]# ll
+total 2
+-rw-rw-r--. 1 raybaba raybaba   19 Apr 24 15:23 file1
+-rw-rw-r--. 1 raybaba raybaba    0 Sep 27 23:59 test2
+
+Then use chown
+[root@localhost Desktop]# chown root file1
+[root@localhost Desktop]# ll
+total 2
+-rw-rw-r--. 1 raybaba raybaba    0 Sep 15 15:21 file01
+-rw-rw-r--. 1 root    raybaba   19 Apr 24 15:23 file1
+
+The ownership of the file has been changed to root.
+We can as well change the group to root as below:
+
+[root@localhost Desktop]# chown root:root file1
+[root@localhost Desktop]# ll
+total 12
+-rw-rw-r--. 1 raybaba raybaba    0 Sep 15 15:21 file01
+-rw-rw-r--. 1 root    root      19 Apr 24 15:23 file1
+
+You cab also change ownership by using -v, -R
+[root@localhost Desktop]# chown -v raybaba:raybaba file1
+
+REMOVE(rm), COPY(cp), MOVE(mv or rename)
+You can not delete folder with rm like that bcos there are files within.
+To delete folder, consider using along with rm, -r, -f force force, -rf
+[root@localhost Desktop]# rm -r DELETEFOLDER/
+rm: remove directory `DELETEFOLDER'? 
+
+using rm -r will prompt for a yes but deleting. But using rm -f deletes right away
+
+cp source destination....syntax
+
+PRINT TO THE SCREEN
+echo is used to print eg
+[root@localhost Desktop]# echo "How are you today"
+How are you today
+
+PRINT TO A FILE
+[root@localhost Desktop]# echo "what is the new" > ECHO
+[root@localhost Desktop]# cat ECHO
+what is the new
+[root@localhost Desktop]# 
+
+As seen above, we can also use echo to echo to a file, then use CAT to print it.
+We can not access echo using help ie echo --help. Rather we use man eg
+man help
+
+PRINT "" ALONG WITH YOUR TEXT
+[root@localhost Desktop]# echo \"how was you test\"
+"how was you test"
+
+PRINT ON NEW LINE
+[root@localhost Desktop]# echo Nigeria \n  Africa  \n  America
+This is not working
+[root@localhost Desktop]# cat ECHO | grep what
+Not working as well
